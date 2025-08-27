@@ -2,7 +2,7 @@ const asyncHandler = require('express-async-handler');
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
 const generateResetToken = require('../utils/generateResetToken');
-const nodemailer = require('nodemailer'); 
+const crypto = require('crypto');
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -64,6 +64,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
     res.json({
       _id: user._id,
       email: user.email,
+      role: user.role,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     });
@@ -89,14 +90,12 @@ const forgotPassword = asyncHandler(async (req, res) => {
   const { resetToken, hashedToken, expireTime } = generateResetToken();
   user.resetPasswordToken = hashedToken;
   user.resetPasswordExpire = expireTime;
-  await user.save({ validateBeforeSave: false }); // Bypass validation for these new fields
+  await user.save({ validateBeforeSave: false });
 
   // Create reset URL
   const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/resetpassword/${resetToken}`;
 
-  // Send email to user (we will configure this)
-  const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
-  // TODO: send an email with the resetUrl
+  // TODO: Send a password reset email to the user with the resetUrl
 
   res.status(200).json({ success: true, message: 'Email sent' });
 });
@@ -130,4 +129,11 @@ const resetPassword = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, message: 'Password reset successful' });
 });
 
-module.exports = { registerUser, loginUser, getUserProfile };
+// @desc    Get admin-only content
+// @route   GET /api/auth/admin
+// @access  Private/Admin
+const getAdminContent = asyncHandler(async (req, res) => {
+  res.json({ message: `Welcome, ${req.user.email}! You have access to admin-only content.` });
+});
+
+module.exports = { registerUser, loginUser, getUserProfile, forgotPassword, resetPassword, getAdminContent };
