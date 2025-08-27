@@ -1,8 +1,8 @@
 require('dotenv').config();
 const express = require('express');
-const connectDB = require('./config/db');
-const authRoutes = require('./routes/authRoutes');
-const { notFound, errorHandler } = require('./middleware/errorHandler');
+const connectDB = require('./src/config/db');
+const authRoutes = require('./src/routes/authRoutes');
+const { notFound, errorHandler } = require('./src/middleware/errorHandler');
 
 // Connect to database
 connectDB();

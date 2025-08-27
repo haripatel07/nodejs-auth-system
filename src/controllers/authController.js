@@ -92,6 +92,8 @@ const forgotPassword = asyncHandler(async (req, res) => {
   user.resetPasswordExpire = expireTime;
   await user.save({ validateBeforeSave: false });
 
+  console.log('Raw Reset Token:', resetToken);
+
   // Create reset URL
   const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/resetpassword/${resetToken}`;
 
