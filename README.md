@@ -112,6 +112,8 @@ You can test these endpoints using a tool like **Postman** or **Insomnia**.
 - Admin Access
 ![admin](https://github.com/haripatel07/nodejs-auth-system/blob/main/pictures/admin_test.png)
 
+Note: The admin test verifies that the API correctly rejects unauthorized users who attempt to access the endpoint
+
 -----
 
 ## Contributing
